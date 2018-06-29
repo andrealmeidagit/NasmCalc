@@ -2,6 +2,7 @@
 NASM program for a simple calculator
 
 ## Reference
+- http://cs.lmu.edu/~ray/notes/nasmtutorial/
 - http://www.idryman.org/blog/2014/12/02/writing-64-bit-assembly-on-mac-os-x/
 - http://www.int80h.org/bsdasm/
 - https://www.nasm.us/doc/nasmdoc0.html
