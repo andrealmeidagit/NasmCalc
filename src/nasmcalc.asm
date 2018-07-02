@@ -1,117 +1,92 @@
 ; ----------------------------------------------------------------------------------------
-; Progam executes 5 math operations with integers. Runs on 64-bit macOS only.
+; Progam executes 5 math operations with integers. Runs on 32-bit Linux.
 ; To assemble and run:
 ;
-;     nasm -fmacho64 nasmcalc.asm && ld nasmcalc.o && ./a.out
+;     nasm -felf nasmcalc.asm && ld nasmcalc.o && ./a.out
 ; ----------------------------------------------------------------------------------------
 
-global      start
+global      _start
 
             section   .text
-start:      call      menu
+_start:     call      menu
             call      switch_case
+			
 
 
-
-exit:       mov       rax, 0x02000001         ; system call for exit
-            xor       rdi, rdi                ; exit code 0
-            syscall                           ; invoke operating system to exit
-
+exit:       mov       eax, 0x00000001         ; system call for exit
+            xor       ebx, ebx                ; exit code 0
+            int 80H                           ; invoke operating system to exit
 
 
-menu:       mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, message1           ; address of string to output
-            mov       rdx, 28                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
+; prints the menu
+menu:       mov ecx, message1				; "Por favor escreva seu nome", 13, 10
+			mov edx, mess1_len
+			call puts
 
-            mov       rax, 0x02000003         ; system call for read
-            mov       rdi, 1                  ; file handle 1 is stdin
-            mov       rsi, name               ; address of string to input
-            mov       rdx, 60                 ; max number of bytes
-            syscall
+            mov	ecx, name
+            mov edx, 60
+            call gets
 
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, message2           ; address of string to output
-            mov       rdx, 6                  ; number of bytes
-            syscall                           ; invoke operating system to do the write
+            mov ecx, message2				; "Hola, "
+            mov edx, mess2_len
+            call puts
 
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, name               ; address of string to output
-            mov       rdx, 60                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
+            mov ecx, name					; name from input
+            mov edx, 60
+            call puts
 
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, message3           ; address of string to output
-            mov       rdx, 38                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
+            mov ecx, message3				; ", bem-vindo ao programa de CALC-IA32", 13, 10
+            mov edx, mess3_len
+            call puts
 
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, menu0              ; address of string to output
-            mov       rdx, 20                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
-
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, menu1              ; address of string to output
-            mov       rdx, 11                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
-
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, menu2              ; address of string to output
-            mov       rdx, 16                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
-
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, menu3              ; address of string to output
-            mov       rdx, 20                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
-
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, menu4              ; address of string to output
-            mov       rdx, 14                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
-
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, menu5              ; address of string to output
-            mov       rdx, 10                  ; number of bytes
-            syscall                           ; invoke operating system to do the write
-
-            mov       rax, 0x02000004         ; system call for write
-            mov       rdi, 1                  ; file handle 1 is stdout
-            mov       rsi, menu6              ; address of string to output
-            mov       rdx, 11                 ; number of bytes
-            syscall                           ; invoke operating system to do the write
-
+			mov ecx, menu0					; "ESCOLHA UMA OPCAO:", 13, 10
+			mov edx, menu0_len
+			call puts
+			
+			mov ecx, menu1					; "- 1: SOMA", 13, 10
+			mov edx, menu1_len
+			call puts
+			
+			mov ecx, menu2					; "- 2: SUBTRACAO", 13, 10
+			mov edx, menu2_len
+			call puts
+			
+			mov ecx, menu3					; "- 3: MULTIPLICACAO", 13, 10
+			mov edx, menu3_len
+			call puts
+			
+			mov ecx, menu4					; "- 4: DIVISAO", 13, 10
+			mov edx, menu4_len
+			call puts
+			
+			mov ecx, menu5					; "- 5: MOD", 13, 10
+			mov edx, menu5_len
+			call puts
+			
+			mov ecx, menu6					; "- 6: SAIR", 13, 10
+			mov edx, menu6_len
+			call puts
+			
             ret
 
+; selects menu option
 switch_case:
-            mov       rax, 0x02000003       ;read
-            mov       rdi, 1
-            mov       rsi, case_menu
-            mov       rdx, 1
-            syscall
+			mov  ecx, case_menu
+            mov  edx, 1
+			call gets
 
-            mov rax, [qword case_menu]
-            cmp rax,  '1'
+            mov eax, [case_menu]
+            cmp eax, '1'
             je case1
-            cmp rax, '2'
+            cmp eax, '2'
             je case2
-            cmp rax, '3'
+            cmp eax, '3'
             je case3
-            cmp rax, '4'
+            cmp eax, '4'
             je case4
-            cmp rax, '5'
+            cmp eax, '5'
             je case5
-            cmp rax, '6'
+            cmp eax, '6'
             je case6
             jmp deft
 
@@ -142,33 +117,233 @@ case5:
             ret
 case6:
 deft:
-            call exit
+            jmp exit
+
 
 arg_input:
-res_output:
-op_sum:
-op_sub:
-op_mul:
-op_div:
-op_mod:
+			mov ecx, arg1
+			mov edx, 1
+			call gets
+			
+            mov ecx, message4				; "Insira o primeiro argumento:", 13, 10
+            mov edx, mess4_len
+            call puts
+			
+			
+			%define argumento arg1
+			%define inteiro int1
+            call get_args
+			
+			mov ecx, message5				; "Insira o segundo argumento:", 13, 10
+            mov edx, mess5_len
+            call puts
+			
+			%define argumento arg2
+			%define inteiro int2
+            call get_args
+            ret
 
-            call exit
+res_output:
+			
+			;mov eax, 1234
+			;mov [resint], eax
+			
+			call debugmess
+			
+			inttostr:
+				mov eax, [resint]
+				cmp eax, 0
+				jge plus
+				neg eax
+				mov ebx, dword '-'
+				push ebx
+				jmp minus
+				plus:
+				mov ebx, dword '+'
+				push ebx
+				minus:
+				
+				mov ebx, 10
+				mov ecx, 10
+				for:
+					mov edx, 0
+					div ebx
+					push edx
+				loop for
+				
+				mov ecx, 10
+				mov edx, 1
+				for2:
+					pop ebx
+					mov [resstring + edx], ebx
+					inc edx
+				loop for2
+				pop ebx
+				mov [resstring], ebx
+				
+				mov ecx, resstring
+				mov edx, 11
+				call puts
+				
+				call debugmess
+				
+			ret
+			
+			
+			
+op_sum:
+			mov eax, [int1]
+			mov ebx, [int2]
+			add eax, ebx
+			mov [resint], eax
+			ret
+			
+op_sub:
+			mov eax, [int1]
+			mov ebx, [int2]
+			sub eax, ebx
+			mov [resint], eax			
+			ret
+op_mul:
+			mov eax, [int1]
+			mov ebx, [int2]
+			imul ebx
+			mov [resint], eax						
+			ret
+op_div:
+			mov eax, [int1]
+			mov ebx, [int2]
+			idiv ebx
+			mov [resint], eax
+			ret
+op_mod:
+			mov eax, [int1]
+			mov ebx, [int2]
+			idiv ebx
+			mov [resint], edx
+            ret
+            
+; prints string in std out
+puts:		mov eax, 0x00000004			; sys_write code
+			mov ebx, 1					; std out
+			int 80H						; syscall
+			ret							; return
+
+; get string from std in
+gets:		mov eax, 0x00000003			; sys_read code
+			mov ebx, 1					; std in
+			int 80H						; syscall
+			ret							; return
+
+
+; get signed int from std in
+get_args:
+			mov	ecx, argumento
+            mov edx, 11
+            call gets
+			
+			xor ecx, ecx
+			count:
+				mov eax, [argumento + ecx]
+				inc ecx
+				cmp eax, 0
+				jne count
+			sub ecx, 3
+			
+			;add ecx, 30H
+			;push ecx
+			;mov ecx, esp
+			;mov edx, 1
+			;call puts
+			;pop edx
+			;mov ecx, argumento
+			;call puts
+			;mov ecx, edx
+			;sub ecx, 30h
+			
+
+			mov eax, 1
+			atoi:
+				mov [temp], eax	
+				mov ebx, argumento
+				add ebx, ecx
+				mov ebx, [ebx]
+				sub ebx, 30H
+				imul ebx
+				add [inteiro], eax
+				mov eax, [temp]
+				imul eax, eax, 10
+				sub ecx, 1
+				test ecx, 1
+				jne atoi
+
+			cmp [argumento], dword '-'
+			jne positive
+			negative:
+				neg dword [inteiro]
+				jmp fim
+			positive:
+				cmp [argumento], dword '+'
+				je fim
+			unsigned:
+				mov ebx, [argumento + ecx]
+				sub ebx, 30H
+				imul ebx
+				add [inteiro], eax
+			fim:
+			ret
+
+debugmess:	
+			pushad
+			mov ecx, dbgmss
+			mov edx, dbglen
+			call puts
+			popad
+			ret
+
+
 
 
 section     .data
-message1:   db        "Por favor escreva seu nome", 13, 10      ;newline at the end
-message2:   db        "Hola, "
-name:       times 60        db   0                              ;allocates array
-message3:   db        ", bem-vindo ao programa de CALC-IA32", 13, 10 ;crlf
-menu0:      db        "ESCOLHA UMA OPCAO:", 13, 10   ;crlf
-menu1:      db        "- 1: SOMA", 13, 10
-menu2:      db        "- 2: SUBTRACAO", 13, 10
-menu3:      db        "- 3: MULTIPLICACAO", 13, 10
-menu4:      db        "- 4: DIVISAO", 13, 10
-menu5:      db        "- 5: MOD", 13, 10
-menu6:      db        "- 6: SAIR", 13, 10
-case_menu   dq        0
-message4:   db        "Insira o primeiro argumento:", 13, 10
-message5:   db        "Insira o segundo argumento:", 13, 10
-arg1:       dq        0
-arg2:       dq        0
+message1:   db			"Por favor escreva seu nome", 13, 10      ;newline at the end
+mess1_len:	equ			$-message1
+message2:   db			"Hola, "
+mess2_len:	equ			$-message2
+message3:   db			", bem-vindo ao programa de CALC-IA32", 13, 10
+mess3_len:	equ			$-message3
+menu0:      db			"ESCOLHA UMA OPCAO:", 13, 10
+menu0_len:	equ			$-menu0
+menu1:      db			"- 1: SOMA", 13, 10
+menu1_len:	equ			$-menu1
+menu2:      db			"- 2: SUBTRACAO", 13, 10
+menu2_len:	equ			$-menu2
+menu3:      db			"- 3: MULTIPLICACAO", 13, 10
+menu3_len:	equ			$-menu3
+menu4:      db			"- 4: DIVISAO", 13, 10
+menu4_len:	equ			$-menu4
+menu5:      db			"- 5: MOD", 13, 10
+menu5_len:	equ			$-menu5
+menu6:      db			"- 6: SAIR", 13, 10
+menu6_len	equ			$-menu6
+message4:   db			"Insira o primeiro argumento:", 13, 10
+mess4_len:	equ			$-message4
+message5:   db			"Insira o segundo argumento:", 13, 10
+mess5_len:	equ			$-message5
+message6	db			"O resultado e: "
+mess6_len	equ			$-message6
+dbgmss		db			"debug!", 13, 10
+dbglen		equ			$-dbgmss
+
+
+
+section	.bss
+
+name:		resb	60
+case_menu:	resd	1
+arg1:		resb	11
+arg2:		resb	11
+int1:		resd	1
+int2:		resd	1
+resstring:	resb	11
+resint:		resd	1
+temp:		resd	1
