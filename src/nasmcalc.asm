@@ -144,90 +144,94 @@ arg_input:
             ret
 
 res_output:
+			mov ecx, message6
+			mov edx, mess6_len
+			call puts	
+				
 			
-				mov eax, [resint]
-				mov ebx, 10
-				
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 10
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 9
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 8
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 7
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 6
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 5
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 4
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 3
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 2
-				mov [ecx], edx
-				cdq
-				div ebx
-				add edx, 30H
-				mov ecx, resstring
-				add ecx, 1
-				mov [ecx], edx				
-				mov ecx, resstring
-				add ecx, 11
-				mov [ecx], byte 13
-				mov ecx, resstring
-				add ecx, 12
-				mov [ecx], byte 10
-				
-				mov eax, [resint]
-				cmp eax, 0
-				jge plus_sign
-				mov [resstring], byte '-'
-				jmp next
-				plus_sign:
-				mov [resstring], byte '+'
-				next: 
-							
-				mov ecx, resstring
-				mov edx, 13
-				
-				call puts
+			mov eax, [resint]
+			mov ebx, 10
+			
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 10
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 9
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 8
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 7
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 6
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 5
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 4
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 3
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 2
+			mov [ecx], edx
+			cdq
+			div ebx
+			add edx, 30H
+			mov ecx, resstring
+			add ecx, 1
+			mov [ecx], edx				
+			mov ecx, resstring
+			add ecx, 11
+			mov [ecx], byte 13
+			mov ecx, resstring
+			add ecx, 12
+			mov [ecx], byte 10
+			
+			mov eax, [resint]
+			cmp eax, 0
+			jge plus_sign
+			mov [resstring], byte '-'
+			jmp next
+			plus_sign:
+			mov [resstring], byte '+'
+			next: 
+						
+			mov ecx, resstring
+			mov edx, 13
+			
+			call puts
 				
 				
 			ret
