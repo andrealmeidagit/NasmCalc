@@ -145,47 +145,90 @@ arg_input:
 
 res_output:
 			
-			;mov eax, 1234
-			;mov [resint], eax
-			
-			call debugmess
-			
-			inttostr:
+				mov eax, [resint]
+				mov ebx, 10
+				
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 10
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 9
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 8
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 7
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 6
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 5
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 4
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 3
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 2
+				mov [ecx], edx
+				cdq
+				div ebx
+				add edx, 30H
+				mov ecx, resstring
+				add ecx, 1
+				mov [ecx], edx				
+				mov ecx, resstring
+				add ecx, 11
+				mov [ecx], byte 13
+				mov ecx, resstring
+				add ecx, 12
+				mov [ecx], byte 10
+				
 				mov eax, [resint]
 				cmp eax, 0
-				jge plus
-				neg eax
-				mov ebx, dword '-'
-				push ebx
-				jmp minus
-				plus:
-				mov ebx, dword '+'
-				push ebx
-				minus:
-				
-				mov ebx, 10
-				mov ecx, 10
-				for:
-					mov edx, 0
-					div ebx
-					push edx
-				loop for
-				
-				mov ecx, 10
-				mov edx, 1
-				for2:
-					pop ebx
-					mov [resstring + edx], ebx
-					inc edx
-				loop for2
-				pop ebx
-				mov [resstring], ebx
-				
+				jge plus_sign
+				mov [resstring], byte '-'
+				jmp next
+				plus_sign:
+				mov [resstring], byte '+'
+				next: 
+							
 				mov ecx, resstring
-				mov edx, 11
+				mov edx, 13
+				
 				call puts
 				
-				call debugmess
 				
 			ret
 			
@@ -344,6 +387,6 @@ arg1:		resb	11
 arg2:		resb	11
 int1:		resd	1
 int2:		resd	1
-resstring:	resb	11
+resstring:	resb	13
 resint:		resd	1
 temp:		resd	1
